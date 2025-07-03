@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=820, initial-scale=1.0" />
-  <title>Perfektionismus-Bremse – MVP</title>
+  <title>Perfektionismus-Bremse – MVP Final</title>
   <style>
     :root {
       --spacing-xs: 8pt;
@@ -135,9 +135,9 @@
 
   <section class="section checklist">
     <div class="label">4. Kurz-Checkliste</div>
-    <label class="checklist-item"><input type="checkbox" class="chk"> Würde eine 80 %-Version das Ziel erreichen?</label>
-    <label class="checklist-item"><input type="checkbox" class="chk"> Erkenne ich den Unterschied noch in 24 h?</label>
-    <label class="checklist-item"><input type="checkbox" class="chk"> Würde ich jemand anderem diesen Anspruch empfehlen?</label>
+    <label class="checklist-item"><input type="checkbox"> Würde eine 80 %-Version das Ziel erreichen?</label>
+    <label class="checklist-item"><input type="checkbox"> Erkenne ich den Unterschied noch in 24 h?</label>
+    <label class="checklist-item"><input type="checkbox"> Würde ich jemand anderem diesen Anspruch empfehlen?</label>
   </section>
 
   <section class="section">
@@ -152,27 +152,32 @@
     const btn8020 = document.getElementById('btn-8020');
     const btnRem = document.getElementById('btn-reminder');
 
-    let lockTimeout, reminderTimeout;
+    let lockTimeout, reminderTimeout, isLocked = false;
 
     slider.addEventListener('input', () => {
+      if (isLocked) {
+        slider.value = 95;
+        return;
+      }
       const v = slider.value;
       pb.style.width = v + '%';
       pt.textContent = v + ' %';
       if (v > 95) activateLock();
-      else cancelLock();
     });
 
     function activateLock() {
+      isLocked = true;
       slider.classList.add('slider-locked');
       warning.style.display = 'block';
-      clearTimeout(lockTimeout);
       lockTimeout = setTimeout(() => {
+        isLocked = false;
         slider.classList.remove('slider-locked');
         warning.style.display = 'none';
       }, 10 * 60 * 1000);
     }
 
     function cancelLock() {
+      isLocked = false;
       slider.classList.remove('slider-locked');
       warning.style.display = 'none';
       clearTimeout(lockTimeout);
