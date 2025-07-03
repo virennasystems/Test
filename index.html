@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=820, initial-scale=1.0" />
-  <title>Perfektionismus-Bremse – MVP Final</title>
+  <title>Perfektionismus-Bremse – Ruckelfrei</title>
   <style>
     :root {
       --spacing-xs: 8pt;
@@ -23,6 +23,7 @@
       background: var(--bg-light);
       color: var(--primary-color);
       padding: var(--safe-top) var(--margin-default) var(--safe-bottom);
+      box-sizing: border-box;
     }
     header {
       font-size: 24pt;
@@ -72,12 +73,10 @@
       margin-top: -10pt;
       cursor: pointer;
     }
-
     .slider-locked {
       pointer-events: none;
       opacity: 0.4;
     }
-
     .button {
       width: 100%;
       margin-top: var(--spacing-md);
@@ -102,12 +101,18 @@
       height: 20pt;
     }
     .warning {
-      padding: var(--spacing-sm);
+      position: fixed;
+      bottom: 20pt;
+      left: 24pt;
+      right: 24pt;
       background: #ffe2e2;
       color: #b00;
-      border-radius: 8pt;
-      margin-top: var(--spacing-sm);
+      border-radius: 12pt;
+      padding: 16pt;
+      font-size: 16pt;
+      z-index: 99;
       display: none;
+      box-shadow: 0 4pt 8pt rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
@@ -117,12 +122,12 @@
 
   <section class="section">
     <div class="label">1. Anspruch vs. Realismus</div>
-    <div class="progress-container" id="progress-container">
+    <div class="progress-container">
       <div class="progress-goal"></div>
       <div class="progress-bar" id="progress-bar" style="width:70%"></div>
     </div>
     <div class="progress-text" id="progress-text">70 %</div>
-    <input type="range" id="slider" min="0" max="100" value="70" aria-label="Slider Anspruch vs Realismus">
+    <input type="range" id="slider" min="0" max="100" value="70">
   </section>
 
   <section class="section">
@@ -140,9 +145,7 @@
     <label class="checklist-item"><input type="checkbox"> Würde ich jemand anderem diesen Anspruch empfehlen?</label>
   </section>
 
-  <section class="section">
-    <div id="soft-lock-warning" class="warning">⚠️ Soft-Lock aktiviert – keine Detailarbeit für 10 Min</div>
-  </section>
+  <div id="soft-lock-warning" class="warning">⚠️ Soft-Lock aktiviert – keine Detailarbeit für 10 Min</div>
 
   <script>
     const slider = document.getElementById('slider');
@@ -174,13 +177,6 @@
         slider.classList.remove('slider-locked');
         warning.style.display = 'none';
       }, 10 * 60 * 1000);
-    }
-
-    function cancelLock() {
-      isLocked = false;
-      slider.classList.remove('slider-locked');
-      warning.style.display = 'none';
-      clearTimeout(lockTimeout);
     }
 
     btn8020.addEventListener('click', () => {
