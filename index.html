@@ -51,7 +51,11 @@
       height: 100%;
       background: rgba(26, 150, 50, 0.3);
     }
-    .progress-text { font-size: 18pt; text-align: right; margin-top: var(--spacing-xs); }
+    .progress-text {
+      font-size: 18pt;
+      text-align: right;
+      margin-top: var(--spacing-xs);
+    }
     input[type="range"] {
       width: 100%;
       margin-top: var(--spacing-sm);
@@ -68,14 +72,35 @@
       margin-top: -10pt;
       cursor: pointer;
     }
-    .button { width: 100%; margin-top: var(--spacing-md); padding: 14pt;
-      background: var(--primary-color); color: #fff; font-size: 16pt;
-      border: none; border-radius: 12pt; cursor: pointer;
+
+    .slider-locked {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+    .button {
+      width: 100%;
+      margin-top: var(--spacing-md);
+      padding: 14pt;
+      background: var(--primary-color);
+      color: #fff;
+      font-size: 16pt;
+      border: none;
+      border-radius: 12pt;
+      cursor: pointer;
       touch-action: manipulation;
     }
     .checklist { margin-top: var(--spacing-sm); }
-    .checklist-item { display: flex; align-items: center; margin-bottom: var(--spacing-xs); }
-    .checklist-item input { margin-right: var(--spacing-xs); width: 20pt; height: 20pt; }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: var(--spacing-xs);
+    }
+    .checklist-item input {
+      margin-right: var(--spacing-xs);
+      width: 20pt;
+      height: 20pt;
+    }
     .warning {
       padding: var(--spacing-sm);
       background: #ffe2e2;
@@ -90,7 +115,6 @@
 
   <header>Perfektionismus-Bremse – MVP</header>
 
-  <!-- 1. Anspruch vs Realismus -->
   <section class="section">
     <div class="label">1. Anspruch vs. Realismus</div>
     <div class="progress-container" id="progress-container">
@@ -101,17 +125,14 @@
     <input type="range" id="slider" min="0" max="100" value="70" aria-label="Slider Anspruch vs Realismus">
   </section>
 
-  <!-- 2. 80/20-Regler -->
   <section class="section">
     <button class="button" id="btn-8020">80/20-Regel aktivieren</button>
   </section>
 
-  <!-- 3. Reminder -->
   <section class="section">
     <button class="button" id="btn-reminder">Reminder: Release statt Revisieren (20 min)</button>
   </section>
 
-  <!-- 4. Kurz-Checkliste -->
   <section class="section checklist">
     <div class="label">4. Kurz-Checkliste</div>
     <label class="checklist-item"><input type="checkbox" class="chk"> Würde eine 80 %-Version das Ziel erreichen?</label>
@@ -119,7 +140,6 @@
     <label class="checklist-item"><input type="checkbox" class="chk"> Würde ich jemand anderem diesen Anspruch empfehlen?</label>
   </section>
 
-  <!-- 5. Soft-Lock -->
   <section class="section">
     <div id="soft-lock-warning" class="warning">⚠️ Soft-Lock aktiviert – keine Detailarbeit für 10 Min</div>
   </section>
@@ -138,24 +158,22 @@
       const v = slider.value;
       pb.style.width = v + '%';
       pt.textContent = v + ' %';
-
-      // soft-lock check
       if (v > 95) activateLock();
       else cancelLock();
     });
 
     function activateLock() {
-      slider.disabled = true;
+      slider.classList.add('slider-locked');
       warning.style.display = 'block';
       clearTimeout(lockTimeout);
       lockTimeout = setTimeout(() => {
-        slider.disabled = false;
+        slider.classList.remove('slider-locked');
         warning.style.display = 'none';
       }, 10 * 60 * 1000);
     }
 
     function cancelLock() {
-      slider.disabled = false;
+      slider.classList.remove('slider-locked');
       warning.style.display = 'none';
       clearTimeout(lockTimeout);
     }
