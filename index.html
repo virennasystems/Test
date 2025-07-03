@@ -1,103 +1,177 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=820, initial-scale=1.0">
-  <title>Wireframe: Perfektionismus-Bremse</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=820, initial-scale=1.0" />
+  <title>Perfektionismus-Bremse – MVP</title>
   <style>
+    :root {
+      --spacing-xs: 8pt;
+      --spacing-sm: 16pt;
+      --spacing-md: 24pt;
+      --spacing-lg: 32pt;
+      --margin-default: 24pt;
+      --safe-top: 20pt;
+      --safe-bottom: 20pt;
+      --touch-size: 44pt;
+      --primary-color: #0a1c44;
+      --bg-light: #fdfdfc;
+    }
     body {
       margin: 0;
-      font-family: system-ui, sans-serif;
-      background: #fdfdfc;
-      padding: 20pt 24pt;
-      color: #111;
+      font-family: 'SF Pro', system-ui, sans-serif;
+      background: var(--bg-light);
+      color: var(--primary-color);
+      padding: var(--safe-top) var(--margin-default) var(--safe-bottom);
     }
-
-    h1 {
+    header {
       font-size: 24pt;
-      margin-bottom: 32pt;
-    }
-
-    .block {
-      border: 2pt dashed #ccc;
-      border-radius: 12pt;
-      padding: 24pt;
-      margin-bottom: 32pt;
-    }
-
-    .label {
-      font-size: 18pt;
-      font-weight: 600;
-      margin-bottom: 16pt;
-    }
-
-    .slider-placeholder,
-    .button-placeholder,
-    .checklist-item,
-    .timer-placeholder,
-    .warning-placeholder {
-      height: 44pt;
-      background: #e0e0e0;
-      border-radius: 8pt;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #666;
-      font-size: 16pt;
-      margin-bottom: 16pt;
-    }
-
-    .checklist-item {
-      height: auto;
-      padding: 16pt;
-      text-align: center;
-    }
-
-    .warning-placeholder {
-      background: #ffe2e2;
-      border: 2pt dashed #d22;
-      color: #b00;
-    }
-
-    .section-title {
-      font-size: 16pt;
-      margin-bottom: 16pt;
       font-weight: bold;
+      margin-bottom: var(--spacing-lg);
+    }
+    .section { margin-bottom: var(--spacing-lg); }
+    .label { font-size: 18pt; margin-bottom: var(--spacing-sm); }
+    .progress-container {
+      position: relative;
+      height: 14pt;
+      background: #e0e0e0;
+      border-radius: 10pt;
+      overflow: hidden;
+    }
+    .progress-bar {
+      position: absolute;
+      height: 100%;
+      background: var(--primary-color);
+      transition: width 0.2s ease;
+    }
+    .progress-goal {
+      position: absolute;
+      left: 70%;
+      width: 10%;
+      height: 100%;
+      background: rgba(26, 150, 50, 0.3);
+    }
+    .progress-text { font-size: 18pt; text-align: right; margin-top: var(--spacing-xs); }
+    input[type="range"] {
+      width: 100%;
+      margin-top: var(--spacing-sm);
+      appearance: none;
+      height: 4pt;
+      background: transparent;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 24pt;
+      height: 24pt;
+      background: var(--primary-color);
+      border-radius: 50%;
+      margin-top: -10pt;
+      cursor: pointer;
+    }
+    .button { width: 100%; margin-top: var(--spacing-md); padding: 14pt;
+      background: var(--primary-color); color: #fff; font-size: 16pt;
+      border: none; border-radius: 12pt; cursor: pointer;
+      touch-action: manipulation;
+    }
+    .checklist { margin-top: var(--spacing-sm); }
+    .checklist-item { display: flex; align-items: center; margin-bottom: var(--spacing-xs); }
+    .checklist-item input { margin-right: var(--spacing-xs); width: 20pt; height: 20pt; }
+    .warning {
+      padding: var(--spacing-sm);
+      background: #ffe2e2;
+      color: #b00;
+      border-radius: 8pt;
+      margin-top: var(--spacing-sm);
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <h1>🧠 Perfektionismus-Bremse (Wireframe)</h1>
+  <header>Perfektionismus-Bremse – MVP</header>
 
-  <div class="block">
+  <!-- 1. Anspruch vs Realismus -->
+  <section class="section">
     <div class="label">1. Anspruch vs. Realismus</div>
-    <div class="slider-placeholder">[Slider 0–100 %]</div>
-    <div class="slider-placeholder">[Zielbereich: 70–80 %]</div>
-  </div>
+    <div class="progress-container" id="progress-container">
+      <div class="progress-goal"></div>
+      <div class="progress-bar" id="progress-bar" style="width:70%"></div>
+    </div>
+    <div class="progress-text" id="progress-text">70 %</div>
+    <input type="range" id="slider" min="0" max="100" value="70" aria-label="Slider Anspruch vs Realismus">
+  </section>
 
-  <div class="block">
-    <div class="label">2. 80/20-Regler</div>
-    <div class="button-placeholder">[Button: 80/20-Regel aktivieren]</div>
-  </div>
+  <!-- 2. 80/20-Regler -->
+  <section class="section">
+    <button class="button" id="btn-8020">80/20-Regel aktivieren</button>
+  </section>
 
-  <div class="block">
-    <div class="label">3. Reminder: Release statt Revisieren</div>
-    <div class="timer-placeholder">[Button: Reminder setzen]</div>
-    <div class="timer-placeholder">[Popup: „Fertig ist besser als perfekt“]</div>
-  </div>
+  <!-- 3. Reminder -->
+  <section class="section">
+    <button class="button" id="btn-reminder">Reminder: Release statt Revisieren (20 min)</button>
+  </section>
 
-  <div class="block">
+  <!-- 4. Kurz-Checkliste -->
+  <section class="section checklist">
     <div class="label">4. Kurz-Checkliste</div>
-    <div class="checklist-item">🧩 „Würde eine 80 %-Version das Ziel erreichen?“</div>
-    <div class="checklist-item">🧩 „Erkenne ich den Unterschied noch in 24h?“</div>
-    <div class="checklist-item">🧩 „Würde ich jemand anderem diesen Anspruch empfehlen?“</div>
-  </div>
+    <label class="checklist-item"><input type="checkbox" class="chk"> Würde eine 80 %-Version das Ziel erreichen?</label>
+    <label class="checklist-item"><input type="checkbox" class="chk"> Erkenne ich den Unterschied noch in 24 h?</label>
+    <label class="checklist-item"><input type="checkbox" class="chk"> Würde ich jemand anderem diesen Anspruch empfehlen?</label>
+  </section>
 
-  <div class="block">
-    <div class="label">5. Soft-Lock-Modus (optional)</div>
-    <div class="warning-placeholder">⚠️ System blockiert Detailarbeit bei > 95 %</div>
-  </div>
+  <!-- 5. Soft-Lock -->
+  <section class="section">
+    <div id="soft-lock-warning" class="warning">⚠️ Soft-Lock aktiviert – keine Detailarbeit für 10 Min</div>
+  </section>
+
+  <script>
+    const slider = document.getElementById('slider');
+    const pb = document.getElementById('progress-bar');
+    const pt = document.getElementById('progress-text');
+    const warning = document.getElementById('soft-lock-warning');
+    const btn8020 = document.getElementById('btn-8020');
+    const btnRem = document.getElementById('btn-reminder');
+
+    let lockTimeout, reminderTimeout;
+
+    slider.addEventListener('input', () => {
+      const v = slider.value;
+      pb.style.width = v + '%';
+      pt.textContent = v + ' %';
+
+      // soft-lock check
+      if (v > 95) activateLock();
+      else cancelLock();
+    });
+
+    function activateLock() {
+      slider.disabled = true;
+      warning.style.display = 'block';
+      clearTimeout(lockTimeout);
+      lockTimeout = setTimeout(() => {
+        slider.disabled = false;
+        warning.style.display = 'none';
+      }, 10 * 60 * 1000);
+    }
+
+    function cancelLock() {
+      slider.disabled = false;
+      warning.style.display = 'none';
+      clearTimeout(lockTimeout);
+    }
+
+    btn8020.addEventListener('click', () => {
+      alert('⚙️ 80/20-Modus: Inhalte werden jetzt vereinfacht.');
+    });
+
+    btnRem.addEventListener('click', () => {
+      clearTimeout(reminderTimeout);
+      alert('⏱ Reminder in 20 Min gesetzt.');
+      reminderTimeout = setTimeout(() => {
+        alert('🚨 Fertig ist besser als perfekt!');
+      }, 20 * 60 * 1000);
+    });
+  </script>
 
 </body>
 </html>
